@@ -1,6 +1,6 @@
-# Nuxt Minimal Starter
+# Thought-viewer
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Application for visual thoughts management
 
 ## Setup
 
