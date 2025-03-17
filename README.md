@@ -1,6 +1,6 @@
 # Thought-viewer
 
-Application for visual thoughts management
+Application for visual thoughts management. For now still in progress
 
 ## Setup
 
