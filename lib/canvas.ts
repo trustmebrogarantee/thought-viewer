@@ -72,10 +72,13 @@ export function wrapText(
   }
 
   // Функция отрисовки
-  const drawText = () => {
+  const render = () => {
     const displayHeight = qualityFactor === 1 ? texture.height / 2 : texture.height / qualityFactor;
     ctx.drawImage(texture!, x, y, maxWidth, displayHeight); // Растягиваем до исходных размеров
   };
 
-  return { lines: texture.height / (lineHeight * (qualityFactor === 1 ? 2 : qualityFactor)), drawText };
+  const lines = texture.height / (lineHeight * (qualityFactor === 1 ? 2 : qualityFactor))
+  const height = lineHeight * lines 
+
+  return { lines, height, render };
 }

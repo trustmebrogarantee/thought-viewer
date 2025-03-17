@@ -4,4 +4,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   pages: true,
   modules: ['@vueuse/nuxt'], 
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 500
+      }
+    }
+  }
 })

@@ -5,7 +5,7 @@
       <input v-model="newDocTitle" placeholder="Название, описание" @keyup.enter="addNewDocument" />
       <button v-if="false" @click="addNewDocument" :disabled="!newDocTitle">Добавить</button>
     </div>
-    <div v-if="pending" class="loading">Загрузка...</div>
+    <div v-if="status === 'pending'" class="loading">Загрузка...</div>
     <ul v-else-if="documents.length" class="tree-list">
       <TreeNode
         v-for="doc in rootDocuments"
@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useDocumentTree } from '~/composables/useDocumentTree';
+import { useCommunicationClient } from '~/components/thought/api'
 import TreeNode from './TreeNode.vue';
 
-const { documents, rootDocuments, moveNode, addDocument, pending } = useDocumentTree();
+const { data: documents, rootDocuments, moveNode, addDocument, status } = useCommunicationClient();
 const newDocTitle = ref('');
 
 function addNewDocument() {

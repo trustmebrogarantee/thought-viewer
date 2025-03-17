@@ -17,12 +17,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { DocumentTypes } from '~/types/document';
+import type { Thought } from '~/types/Thought';
 import NodeHeader from './NodeHeader.vue';
 
 defineProps<{
-  doc: DocumentTypes.Renderable;
-  documents: DocumentTypes.Renderable[];
+  doc: Thought.Renderable;
+  documents: Thought.Renderable[];
   moveNode: (nodeId: string, newParentId: string | null) => Promise<boolean>;
   level: number;
 }>();

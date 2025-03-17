@@ -4,12 +4,8 @@ export const lerp = (a: number, b: number, t: number) => {
 
 export const clamp = (min: number, val: number, max: number) => Math.min(
   max, 
-  Math.max(
-    val,
-    min
-  )
+  Math.max(val, min)
 )
-
 
 export class Vec2 {
   constructor(public x: number, public y: number) {}
@@ -24,12 +20,16 @@ export class Vec2 {
     return this;
   }
   mul(scalar: number): Vec2 {
-    return new Vec2(this.x * scalar, this.y * scalar);
+    this.x *= scalar;
+    this.y *= scalar;
+    return this;
   }
   normalize(): Vec2 {
     const length = Math.sqrt(this.x ** 2 + this.y ** 2);
     if (length === 0) return this;
-    return new Vec2(this.x / length, this.y / length);
+    this.x /= length;
+    this.y /= length;
+    return this;
   }
   dot(other: Vec2): number {
     return this.x * other.x + this.y * other.y;
@@ -40,30 +40,41 @@ export class Vec2 {
     return Math.sqrt(dx * dx + dy * dy);
   }
   lerp(other: Vec2, t: number): Vec2 {
-    this.x = lerp(this.x, other.x, t),
-    this.y = lerp(this.y, other.y, t)
-    return this
-  }
-
-  lerpInt(other: Vec2, t: number): Vec2 {
-    this.x = Math.round(lerp(this.x, Math.round(other.x), t)),
-    this.y = Math.round(lerp(this.y, Math.round(other.y), t))
-    return this
-  }
-
-  set(x: number, y2: number): Vec2 {
-    this.x = x;
-    this.y = y2;
+    this.x = lerp(this.x, other.x, t);
+    this.y = lerp(this.y, other.y, t);
     return this;
   }
-
+  lerpInt(other: Vec2, t: number): Vec2 {
+    this.x = Math.round(lerp(this.x, Math.round(other.x), t));
+    this.y = Math.round(lerp(this.y, Math.round(other.y), t));
+    return this;
+  }
+  set(x: number, y: number): Vec2 {
+    this.x = x;
+    this.y = y;
+    return this;
+  }
   equals(other: Vec2): boolean {
     return this.x === other.x && this.y === other.y;
   }
-
   addScalar(n: number): Vec2 {
     this.x += n;
     this.y += n;
     return this;
+  }
+  subScalar(n: number): Vec2 {
+    this.x -= n;
+    this.y -= n;
+    return this;
+  }
+}
+
+export class Vec2Pool {
+  private pool: Vec2[] = [];
+  get(x: number, y: number): Vec2 {
+    return this.pool.length ? this.pool.pop()!.set(x, y) : new Vec2(x, y);
+  }
+  release(v: Vec2): void {
+    this.pool.push(v);
   }
 }

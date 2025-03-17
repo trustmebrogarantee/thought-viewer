@@ -1,4 +1,3 @@
-<!-- components/NodeHeader.vue -->
 <template>
   <div
     class="node-header"
@@ -24,11 +23,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { DocumentTypes } from '~/types/document';
+import type { Thought } from '~/types/Thought';
 
 const props = defineProps<{
-  doc: DocumentTypes.Renderable;
-  documents: DocumentTypes.Renderable[];
+  doc: Thought.Renderable;
+  documents: Thought.Renderable[];
   moveNode: (nodeId: string, newParentId: string | null) => Promise<boolean>;
   isExpanded: boolean;
 }>();

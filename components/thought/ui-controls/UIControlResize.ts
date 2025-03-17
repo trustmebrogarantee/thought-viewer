@@ -1,27 +1,44 @@
-import { Vec2, type Renderable } from "~/components/canvas/CanvasDirector";
-import { UIControl } from ".";
-import type { Follower } from ".";
+import type { Thought } from "~/types/Thought";
+import { Vec2 } from "~/lib/math";
+import { UIControl } from "./UIControl";
+
+export class UIControlResize extends UIControl<ResizeFollower> {
+  constructor(entity: Thought.Renderable) {
+    super(
+      entity,
+      new ResizeFollower(entity, 10, 10, 'left-center'),
+      new ResizeFollower(entity, 10, 10, 'right-center'),
+      new ResizeFollower(entity, 10, 10, 'bottom-center'),
+      new ResizeFollower(entity, 10, 10, 'top-center'),
+
+      new ResizeFollower(entity, 12, 12, 'top-left'),
+      new ResizeFollower(entity, 12, 12, 'top-right'),
+      new ResizeFollower(entity, 12, 12, 'bottom-left'),
+      new ResizeFollower(entity, 12, 12, 'bottom-right')
+    )
+  }
+}
 
 export interface ResizeFollowerPayload {
   direction: 'top-center' | 'bottom-center' | 'left-center' | 'right-center' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 }
 
-export class ResizeFollower implements Follower {
-  public type: Follower["type"]
-  public offset: Follower["offset"]
-  public position:  Follower["position"]
-  public box: Follower["box"]
-  public zIndex?: Follower["zIndex"]
+export class ResizeFollower implements Thought.Follower {
+  public type: Thought.Follower["type"]
+  public offset: Thought.Follower["offset"]
+  public position:  Thought.Follower["position"]
+  public box: Thought.Follower["box"]
+  public zIndex?: Thought.Follower["zIndex"]
   public payload: ResizeFollowerPayload
-  public entity: Renderable
+  public entity: Thought.Renderable
   public parent: UIControlResize | null
-  private prevState: { box: Follower["box"] }
+  private prevState: { box: Thought.Follower["box"] }
 
-  constructor(entity: Renderable, width: number, height: number, direction: ResizeFollowerPayload["direction"]) {
+  constructor(entity: Thought.Renderable, width: number, height: number, direction: ResizeFollowerPayload["direction"]) {
     this.type = 'button:icon:resize'
-    this.offset = new Vec2(0, 0); // Относительное смещение от entity
-    this.position = { x: 0, y: 0 }; // Абсолютная позиция (обновляется автоматически)
-    this.box = { width, height }; // Размеры для рендеринга
+    this.offset = new Vec2(0, 0);
+    this.position = new Vec2(0, 0);
+    this.box = { width, height }; 
     this.payload = { direction }
     this.entity = entity
     this.parent = null
@@ -45,7 +62,7 @@ export class ResizeFollower implements Follower {
     else if (this.payload.direction === 'top-center') this.offset = new Vec2(0, 0).sub(new Vec2(halfMyWidth - this.entity.box.width / 2, myHeight))
   }
 
-  render (ctx: CanvasRenderingContext2D): void {
+  render (ctx: CanvasRenderingContext2D, viewport: Thought.Viewport, entity: Thought.Renderable): void {
     if (this.payload.direction.includes('center')) {
       ctx.beginPath();
       ctx.fillStyle = 'rgb(22, 115, 197)';
@@ -108,22 +125,5 @@ export class ResizeFollower implements Follower {
   styleDragStop() {
     this.box = { ...this.prevState.box }
     this.recalculate()
-  }
-}
-
-export class UIControlResize extends UIControl<ResizeFollower> {
-  constructor(entity: Renderable) {
-    super(
-      entity,
-      new ResizeFollower(entity, 10, 10, 'left-center'),
-      new ResizeFollower(entity, 10, 10, 'right-center'),
-      new ResizeFollower(entity, 10, 10, 'bottom-center'),
-      new ResizeFollower(entity, 10, 10, 'top-center'),
-
-      new ResizeFollower(entity, 12, 12, 'top-left'),
-      new ResizeFollower(entity, 12, 12, 'top-right'),
-      new ResizeFollower(entity, 12, 12, 'bottom-left'),
-      new ResizeFollower(entity, 12, 12, 'bottom-right')
-    )
   }
 }
